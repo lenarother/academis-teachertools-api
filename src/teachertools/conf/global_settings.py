@@ -37,7 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Custom apps
+    'teachertools.accounts.apps.AccountsConfig',
 ]
+
+AUTH_USER_MODEL = 'accounts.User'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
