@@ -38,12 +38,22 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Third party
+    'rest_framework',
+
     # Custom apps
     'teachertools.accounts.apps.AccountsConfig',
+    'teachertools.quiz.apps.QuizConfig',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    )
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
