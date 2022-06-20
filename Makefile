@@ -1,9 +1,17 @@
-devinstall:
-	sh -c 'if [ "`which msgfmt`" == "" ]; then brew install gettext && brew link gettext --force; fi'
+.PHONY: coverage coverage-html devinit devinstall tests
 
+help:
+	@echo "devinstall - install requirements and create settings.py"
+	@echo "devinit - apply migrations"
+	@echo "test - run tests"
+	@echo "coverage - calculate coverage"
+	@echo "coverage-html - calculate coverage html"
+
+
+devinstall:
 	pip install --upgrade pip setuptools wheel
 	pip install -e .
-	pip install -r resources/requirements-develop.txt
+	pip install -r resources/requirements-dev.txt
 
 	sh -c 'if [ ! -f src/teachertools/settings.py ]; then echo "from teachertools.conf.dev_settings import *" > src/teachertools/settings.py; fi'
 
