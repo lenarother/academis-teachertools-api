@@ -3,6 +3,7 @@
 .ropeproject
 .idea
 src/teachertools/settings.py
+.env
 
 # Django #
 *.log
