@@ -1,4 +1,4 @@
-from distance.conf.global_settings import *
+from teachertools.conf.global_settings import *
 
 
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
