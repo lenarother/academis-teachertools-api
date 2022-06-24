@@ -9,6 +9,7 @@ RUN pip install -r /project/requirements-server.txt
 COPY src/ /project/src/
 COPY setup.py /project/
 
+RUN rm /project/src/teachertools/settings.py
 RUN sh -c 'if [ ! -f /project/src/teachertools/settings.py ]; then echo "from teachertools.conf.docker_settings import *" > /project/src/teachertools/settings.py; fi'
 RUN pip install -e /project
 
