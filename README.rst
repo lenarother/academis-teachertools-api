@@ -67,3 +67,20 @@ Now you can run the webserver and start using the site.
 
 This starts a local webserver on `localhost:8000 <http://localhost:8000/>`_. To
 view the administration interface visit `/admin/ <http://localhost:8000/admin/>`_
+
+
+Deployment
+----------
+
+.. code-block:: bash
+
+    $ heroku login
+
+    $ # First time deployment
+    $ heroku create
+    $ heroku config:add MY_VARIABLE=secret -a <app-name>
+    $ heroku config:get MY_VARIABLE -a <app-name>
+
+    $ heroku container:login
+    $ heroku container:push <container-name> -a=<app-name>
+    $ heroku container:release -a=<app-name> <container-name>
