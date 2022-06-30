@@ -45,5 +45,29 @@ class QuestionSerializer(serializers.ModelSerializer):
         return question_instance
 
 
-# class QuestionPreviewSerializer(serializers.Serializer):
-#     pass
+class QuestionPreviewSerializer(serializers.Serializer):
+    body = serializers.CharField()
+
+    def validate(self, attrs):
+        body = attrs.get('body', '')
+        if not is_question_valid(body):
+            raise serializers.ValidationError(
+                'Question markdown invalid: no answers list detected.'
+            )
+        return attrs
+
+    def to_internal_value(self, data):
+        body = data.get('body', '')
+        if not is_question_valid(body):
+            return data
+
+        text, answers = parse_question(body)
+        return {
+            'uuid': '',
+            'body': body,
+            'text': text,
+            'answers': [
+                {'uuid': '', 'text': answer}
+                for answer in answers
+            ],
+        }

@@ -62,3 +62,19 @@ class TestQuestionDetail:
 
         with pytest.raises(NotImplementedError):
             api_client.put(url, data=data)
+
+
+class TestQuestionPreview:
+
+    def setup(self):
+        self.url = reverse('api:question-preview')
+
+    def test_preview_question_without_saving(self, api_client):
+        data = {'body': QUESTION_1}
+        response = api_client.post(self.url, data=data)
+        assert response.status_code == 200
+
+    def test_invalid_question_cannot_be_previued(self, api_client):
+        data = {'body': 'foo'}
+        response = api_client.post(self.url, data=data)
+        assert response.status_code == 400
