@@ -51,3 +51,11 @@ def parse_question(data):
     answer_list = parse_answers_html(answers_html)
 
     return text, answer_list
+
+
+def is_question_valid(md):
+    html = md2html(md)
+    for pattern in [ANSWERS_UL, ANSWERS_OL]:
+        if re.match(pattern, html, re.DOTALL):
+            return True
+    return False
