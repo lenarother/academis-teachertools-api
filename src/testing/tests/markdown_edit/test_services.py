@@ -1,20 +1,8 @@
 import pytest
 
 from teachertools.markdown_edit.services import parse_question
+from testing.resources.testdata import questions
 
-QUESTION_1 = """
-1) Which Python package would you like to learn more about?
-
-- pandas
-- numpy
-- flask
-- matplotlib
-"""
-
-QUESTION_1_EXPECTED = (
-    '1) Which Python package would you like to learn more about?',
-    ['pandas', 'numpy', 'flask', 'matplotlib']
-)
 
 QUESTION_2 = """
 2) Which of the following Python commands is correct?
@@ -66,7 +54,7 @@ QUESTION_4_EXPECTED = (
 @pytest.mark.parametrize(
     'data, expected',
     (
-        (QUESTION_1, QUESTION_1_EXPECTED),
+        (questions.Q1, questions.Q1_PARSED),
         (QUESTION_2, QUESTION_2_EXPECTED),
         (QUESTION_3, QUESTION_3_EXPECTED),
         (QUESTION_4, QUESTION_4_EXPECTED),

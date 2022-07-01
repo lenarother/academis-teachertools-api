@@ -2,15 +2,7 @@ import pytest
 from django.urls import reverse
 
 from testing.factories.quiz import QuestionFactory
-
-QUESTION_1 = """
-1) Which Python package would you like to learn more about?
-
-- pandas
-- numpy
-- flask
-- matplotlib
-"""
+from testing.resources.testdata import questions
 
 
 @pytest.mark.django_db
@@ -20,7 +12,7 @@ class TestQuestionList:
         self.url = reverse('api:question-list')
 
     def test_create_question(self, api_client):
-        data = {'body': QUESTION_1}
+        data = {'body': questions.Q1}
         response = api_client.post(self.url, data=data)
         assert response.status_code == 201
 
@@ -70,7 +62,7 @@ class TestQuestionPreview:
         self.url = reverse('api:question-preview')
 
     def test_preview_question_without_saving(self, api_client):
-        data = {'body': QUESTION_1}
+        data = {'body': questions.Q1}
         response = api_client.post(self.url, data=data)
         assert response.status_code == 200
 
