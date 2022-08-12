@@ -7,6 +7,15 @@ from teachertools.markdown_edit.services import (is_question_valid,
 from teachertools.quiz.models import Answer, Question
 
 
+class ReadOnlyModelSerializer(serializers.ModelSerializer):
+
+    def get_fields(self, *args, **kwargs):
+        fields = super().get_fields(*args, **kwargs)
+        for field in fields:
+            fields[field].read_only = True
+        return fields
+
+
 class AnswerSerializer(serializers.ModelSerializer):
     uuid = serializers.UUIDField(format='hex', default=uuid.uuid4)
 
@@ -71,3 +80,42 @@ class QuestionPreviewSerializer(serializers.Serializer):
                 for answer in answers
             ],
         }
+
+
+class VoteSerializer(serializers.Serializer):
+    answer_uuid = serializers.UUIDField(format='hex', required=True)
+
+    def validate(self, attrs):
+        question_uuid = self.context.get('question_uuid')
+        answer_uuid = attrs['answer_uuid']
+        answer_instance = Answer.objects.get(uuid=answer_uuid)
+
+        if not answer_instance.question.uuid.hex == question_uuid:
+            raise serializers.ValidationError('No such answer')
+
+        return attrs
+
+    def create(self, validated_data):
+        answer_instance = Answer.objects.get(
+            uuid=validated_data.get('answer_uuid')
+        )
+        answer_instance.votes += 1
+        answer_instance.save()
+        return answer_instance
+
+
+class AnswerResultSerializer(ReadOnlyModelSerializer):
+    name = serializers.CharField(source='text')
+    y = serializers.IntegerField(source='votes')
+
+    class Meta:
+        model = Answer
+        fields = ['name', 'y']
+
+
+class QuestionResultSerilaizer(ReadOnlyModelSerializer):
+    data = AnswerResultSerializer(many=True, source='answers')
+
+    class Meta:
+        model = Question
+        fields = ['data']

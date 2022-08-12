@@ -41,6 +41,10 @@ class Answer(models.Model):
         related_name='answers',
 
     )
+    votes = models.PositiveSmallIntegerField(
+        verbose_name='Votes',
+        default=0,
+    )
 
     def __str__(self):
         return f'{self.text}'

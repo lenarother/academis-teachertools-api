@@ -9,6 +9,16 @@ urlpatterns = [
         name='question-preview'
     ),
     path(
+        'vote/<str:uuid>/',
+        views.QuestionVote.as_view(),
+        name='question-vote'
+    ),
+    path(
+        'result/<str:uuid>/',
+        views.QuestionResult.as_view(),
+        name='question-result'
+    ),
+    path(
         '<str:uuid>/',
         views.QuestionDetail.as_view(),
         name='question-detail'

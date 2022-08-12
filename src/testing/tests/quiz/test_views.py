@@ -1,7 +1,7 @@
 import pytest
 from django.urls import reverse
 
-from testing.factories.quiz import QuestionFactory
+from testing.factories.quiz import AnswerFactory, QuestionFactory
 from testing.resources.testdata import questions
 
 
@@ -70,3 +70,64 @@ class TestQuestionPreview:
         data = {'body': 'foo'}
         response = api_client.post(self.url, data=data)
         assert response.status_code == 400
+
+
+@pytest.mark.django_db
+class TestVote:
+
+    def get_url(self, question_instance):
+        return reverse(
+            'api:question-vote',
+            kwargs={'uuid': question_instance.uuid.hex}
+        )
+
+    def test_answer_can_be_voted_on(self, api_client):
+        answer_instance = AnswerFactory.create()
+        assert answer_instance.votes == 0
+
+        url = self.get_url(answer_instance.question)
+        data = {'answer_uuid': answer_instance.uuid.hex}
+        response = api_client.post(url, data=data)
+        answer_instance.refresh_from_db()
+        assert response.status_code == 201
+        assert answer_instance.votes == 1
+
+
+@pytest.mark.django_db
+class TestQuestionResult:
+
+    def get_url(self, question_instance):
+        return reverse(
+            'api:question-result',
+            kwargs={'uuid': question_instance.uuid.hex}
+        )
+
+    def test_get_question_votes_for_chart(self, api_client):
+        question = QuestionFactory.create()
+        answer_1 = AnswerFactory.create(question=question, votes=2)
+        answer_2 = AnswerFactory.create(question=question, votes=0)
+        answer_3 = AnswerFactory.create(question=question, votes=1)
+
+        url = self.get_url(question)
+        response = api_client.get(url,)
+        assert response.status_code == 200
+        assert response.json() == {
+            'name': 'Answers',
+            'colorByPoint': True,
+            'data': [
+                {
+                    'name': answer_1.text,
+                    'y': answer_1.votes,
+                },
+                {
+                    'name': answer_2.text,
+                    'y': answer_2.votes,
+                },
+                {
+                    'name': answer_3.text,
+                    'y': answer_3.votes,
+                },
+
+            ]
+
+        }

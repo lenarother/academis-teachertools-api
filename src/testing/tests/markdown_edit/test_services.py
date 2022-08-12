@@ -3,7 +3,6 @@ import pytest
 from teachertools.markdown_edit.services import parse_question
 from testing.resources.testdata import questions
 
-
 QUESTION_2 = """
 2) Which of the following Python commands is correct?
 
